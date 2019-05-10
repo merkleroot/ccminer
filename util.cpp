@@ -1810,6 +1810,9 @@ static bool stratum_show_message(struct stratum_ctx *sctx, json_t *id, json_t *p
 	if (sctx->is_equihash)
 		return equi_stratum_show_message(sctx, id, params);
 
+	if (sctx->is_equiscrypthash)
+		return equi_stratum_show_message(sctx, id, params);
+
 	val = json_array_get(params, 0);
 	if (val)
 		applog(LOG_NOTICE, "MESSAGE FROM SERVER: %s", json_string_value(val));
@@ -1886,6 +1889,11 @@ bool stratum_handle_method(struct stratum_ctx *sctx, const char *s)
 	if (!strcasecmp(method, "mining.set_target")) {
 		sctx->is_equihash = true;
 		ret = equi_stratum_set_target(sctx, params);
+		goto out;
+	}
+	if (!strcasecmp(method, "mining.set_xtarget")) {
+		sctx->is_equiscrypthash = true;
+		ret = equiscrypt_stratum_set_target(sctx, params);
 		goto out;
 	}
 	if (!strcasecmp(method, "mining.set_extranonce")) {
