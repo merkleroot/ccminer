@@ -87,7 +87,7 @@ template <u32 RB, u32 SM> struct equiscrypt;
 
 // ---------------------------------------------------------------------------------------------------
 
-struct eq_cuda_context_interface
+struct eqscrypt_cuda_context_interface
 {
 	//virtual ~eq_cuda_context_interface();
 
@@ -112,7 +112,7 @@ public:
 // ---------------------------------------------------------------------------------------------------
 
 template <u32 RB, u32 SM, u32 SSM, u32 THREADS, typename PACKER>
-class eq_cuda_context : public eq_cuda_context_interface
+class eqscrypt_cuda_context : public eqscrypt_cuda_context_interface
 {
 	equiscrypt<RB, SM>* device_eq;
 	scontainerreal* solutions;

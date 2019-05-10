@@ -23,7 +23,7 @@
 //#include <mutex>
 
 #include "equiscrypthash.h"
-#include "eqcuda.hpp" // eq_cuda_context
+#include "eqscryptcuda.hpp" // eq_cuda_context
 
 #include "blake2/blake2.h"
 
@@ -1867,7 +1867,7 @@ __global__ void digit_last_wdc(equiscrypt<RB, SM>* eq)
 }
 
 //std::mutex dev_init;
-int dev_init_done[MAX_GPUS] = { 0 };
+int equiscrypt_dev_init_done[MAX_GPUS] = { 0 };
 
 __host__
 static int compu32(const void *pa, const void *pb)
@@ -1957,7 +1957,7 @@ __host__ eq_cuda_context<RB, SM, SSM, THREADS, PACKER>::eq_cuda_context(int thr_
 	threadsperblock_digits = THREADS;
 
 	//dev_init.lock();
-	if (!dev_init_done[device_id])
+	if (!equiscrypt_dev_init_done[device_id])
 	{
 		// only first thread shall init device
 		checkCudaErrors(cudaSetDevice(device_id));
@@ -2000,7 +2000,7 @@ __host__ eq_cuda_context<RB, SM, SSM, THREADS, PACKER>::eq_cuda_context(int thr_
 		checkCudaDriverErrors(cuCtxPushCurrent(pctx));
 #endif
 	}
-	++dev_init_done[device_id];
+	++equiscrypt_dev_init_done[device_id];
 	//dev_init.unlock();
 
 	if (cudaMalloc((void**)&device_eq, equiscrypt_mem_sz) != cudaSuccess)
@@ -2106,7 +2106,7 @@ void eq_cuda_context<RB, SM, SSM, THREADS, PACKER>::freemem()
 #endif
 	} else {
 		checkCudaErrors(cudaDeviceReset());
-		dev_init_done[device_id] = 0;
+		equiscrypt_dev_init_done[device_id] = 0;
 	}
 }
 

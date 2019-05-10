@@ -52,7 +52,7 @@ extern "C" int equiscrypt_verify_sol(void * const hdr, void * const sol)
 static bool init[MAX_GPUS] = { 0 };
 static int valid_sols[MAX_GPUS] = { 0 };
 static uint8_t _ALIGN(64) data_sols[MAX_GPUS][MAXREALSOLS][281] = { 0 }; // 140+3+1344 requiscryptred
-static eq_cuda_context_interface* solvers[MAX_GPUS] = { NULL };
+static eqscrypt_cuda_context_interface* solvers[MAX_GPUS] = { NULL };
 
 static void CompressArray(const unsigned char* in, size_t in_len,
 	unsigned char* out, size_t out_len, size_t bit_len, size_t byte_pad)
