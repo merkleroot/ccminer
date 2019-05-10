@@ -1964,6 +1964,9 @@ static void *miner_thread(void *userdata)
 		} else if (opt_algo == ALGO_EQUIHASH) {
 			nonceptr = &work.data[EQNONCE_OFFSET]; // 27 is pool extranonce (256bits nonce space)
 			wcmplen = 4+32+32;
+		} else if (opt_algo == ALGO_EQUISCRTYPHASH) {
+			nonceptr = &work.data[EQNONCE_OFFSET]; // 27 is pool extranonce (256bits nonce space)
+			wcmplen = 4+32+32;
 		}
 
 		if (have_stratum) {
@@ -2097,6 +2100,9 @@ static void *miner_thread(void *userdata)
 			nonceptr[2] |= thr_id;
 
 		} else if (opt_algo == ALGO_EQUIHASH) {
+			nonceptr[1]++;
+			nonceptr[1] |= thr_id << 24;
+		} else if (opt_algo == ALGO_EQUISCRTYPHASH) {
 			nonceptr[1]++;
 			nonceptr[1] |= thr_id << 24;
 			//applog_hex(&work.data[27], 32);
@@ -2713,7 +2719,7 @@ static void *miner_thread(void *userdata)
 		}
 
 		// only required to debug purpose
-		if (opt_debug && check_dups && opt_algo != ALGO_DECRED && opt_algo != ALGO_EQUIHASH && opt_algo != ALGO_SIA)
+		if (opt_debug && check_dups && opt_algo != ALGO_DECRED && opt_algo != ALGO_EQUIHASH && opt_algo != ALGO_SIA && opt_algo != ALGO_EQUISCRTYPHASH)
 			hashlog_remember_scan_range(&work);
 
 		/* output */
@@ -4106,7 +4112,7 @@ int main(int argc, char *argv[])
 		allow_mininginfo = false;
 	}
 
-	if (opt_algo == ALGO_EQUIHASH) {
+	if (opt_algo == ALGO_EQUIHASH || opt_algo == ALGO_EQUISCRTYPHASH) {
 		opt_extranonce = false; // disable subscribe
 	}
 

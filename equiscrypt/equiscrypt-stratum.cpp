@@ -129,7 +129,7 @@ bool equiscrypt_stratum_notify(struct stratum_ctx *sctx, json_t *params)
 	state_utxo_root = json_string_value(json_array_get(params, p++)); //blank (reserved)
 	clean = json_is_true(json_array_get(params, p)); p++;
 
-    applog(LOG_ERR, "%d %d %d %d", strlen(coinb1), strlen(coinb2), strlen(nbits), strlen(stime));
+    //applog(LOG_ERR, "%d %d %d %d", strlen(coinb1), strlen(coinb2), strlen(nbits), strlen(stime));
 	if (!job_id || !prevhash || !coinb1 || !coinb2 || !version || !nbits || !stime ||
 	    strlen(prevhash) != 64 || strlen(version) != 8 ||
 	    strlen(coinb1) != 64 || strlen(coinb2) != 64 ||
