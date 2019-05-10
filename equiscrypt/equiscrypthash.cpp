@@ -12,7 +12,7 @@
 
 #include <sph/sph_sha2.h>
 
-#include "eqcuda.hpp"
+#include "eqscryptcuda.hpp"
 #include "equiscrypthash.h" // equiscrypt_verify()
 
 #include <miner.h>
