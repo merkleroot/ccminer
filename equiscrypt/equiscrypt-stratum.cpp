@@ -30,7 +30,7 @@ double target_to_diff_equiscrypt(uint32_t* target)
 	if (!m)
 		return 0.;
 	else
-		return (double)0xffff0000UL/m;
+		return (double)0xffff000000UL/m;
 }
 
 void diff_to_target_equiscrypt(uint32_t *target, double diff)
