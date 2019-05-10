@@ -102,6 +102,7 @@ static const char *algo_names[] = {
 	"decred",
 	"dmd-gr",
 	"equihash",
+	"equiscrypthash",
 	"exosis",
 	"fresh",
 	"fugue256",
@@ -192,6 +193,8 @@ static inline int algo_to_int(char* arg)
 			i = ALGO_DMD_GR;
 		else if (!strcasecmp("equi", arg))
 			i = ALGO_EQUIHASH;
+		else if (!strcasecmp("equiscrypt", arg))
+			i = ALGO_EQUISCRTYPHASH;
 		else if (!strcasecmp("doom", arg))
 			i = ALGO_LUFFA;
 		else if (!strcasecmp("hmq17", arg))
