@@ -89,7 +89,7 @@ template <u32 RB, u32 SM> struct equiscrypt;
 
 struct eqscrypt_cuda_context_interface
 {
-	//virtual ~eq_cuda_context_interface();
+	//virtual ~eqscrypt_cuda_context_interface();
 
 	virtual void solve(const char *tequiscrypthash_header,
 		unsigned int tequiscrypthash_header_len,
@@ -126,9 +126,9 @@ class eqscrypt_cuda_context : public eqscrypt_cuda_context_interface
 		fn_solution solutionf,
 		fn_hashdone hashdonef);
 public:
-	eq_cuda_context(int thr_id, int dev_id);
+	eqscrypt_cuda_context(int thr_id, int dev_id);
 	void freemem();
-	~eq_cuda_context();
+	~eqscrypt_cuda_context();
 };
 
 // RB, SM, SSM, TPB, PACKER... but any change only here will fail..

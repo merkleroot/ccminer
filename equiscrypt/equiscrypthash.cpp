@@ -166,16 +166,16 @@ extern "C" int scanhash_equiscrypthash(int thr_id, struct work *work, uint32_t m
 			int mode = 1;
 			switch (mode) {
 			case 1:
-				solvers[thr_id] = new eq_cuda_context<CONFIG_MODE_1>(thr_id, device_map[thr_id]);
+				solvers[thr_id] = new eqscrypt_cuda_context<CONFIG_MODE_1>(thr_id, device_map[thr_id]);
 				break;
 #ifdef CONFIG_MODE_2
 			case 2:
-				solvers[thr_id] = new eq_cuda_context<CONFIG_MODE_2>(thr_id, device_map[thr_id]);
+				solvers[thr_id] = new eqscrypt_cuda_context<CONFIG_MODE_2>(thr_id, device_map[thr_id]);
 				break;
 #endif
 #ifdef CONFIG_MODE_3
 			case 3:
-				solvers[thr_id] = new eq_cuda_context<CONFIG_MODE_3>(thr_id, device_map[thr_id]);
+				solvers[thr_id] = new eqscrypt_cuda_context<CONFIG_MODE_3>(thr_id, device_map[thr_id]);
 				break;
 #endif
 			default:
@@ -281,7 +281,7 @@ void free_equiscrypthash(int thr_id)
 		return;
 
 	// assume config 1 was used... interface destructor seems bad
-	eq_cuda_context<CONFIG_MODE_1>* ptr = dynamic_cast<eq_cuda_context<CONFIG_MODE_1>*>(solvers[thr_id]);
+	eqscrypt_cuda_context<CONFIG_MODE_1>* ptr = dynamic_cast<eqscrypt_cuda_context<CONFIG_MODE_1>*>(solvers[thr_id]);
 	ptr->freemem();
 	ptr = NULL;
 
@@ -291,6 +291,6 @@ void free_equiscrypthash(int thr_id)
 }
 
 // mmm... viva c++ junk
-void eq_cuda_context_interface::solve(const char *tequiscrypthash_header, unsigned int tequiscrypthash_header_len,
+void eqscrypt_cuda_context_interface::solve(const char *tequiscrypthash_header, unsigned int tequiscrypthash_header_len,
 	const char* nonce, unsigned int nonce_len,
 	fn_cancel cancelf, fn_solution solutionf, fn_hashdone hashdonef) { }
