@@ -1787,7 +1787,7 @@ static bool stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 		case ALGO_EQUIHASH:
 			equi_work_set_target(work, sctx->job.diff / opt_difficulty);
 			break;
-		case ALGO_EQUISCRYPTHASH:
+		case ALGO_EQUISCRTYPHASH:
 			equiscrypt_work_set_target(work, sctx->job.diff / opt_difficulty);
 			break;
 		default:
