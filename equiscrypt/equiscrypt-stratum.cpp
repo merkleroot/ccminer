@@ -80,8 +80,8 @@ void equiscrypt_work_set_target(struct work* work, double diff)
 	// target is given as data by the equiscrypthash stratum
 	// memcpy(work->target, stratum.job.claim, 32); // claim field is only used for lbry
 	diff_to_target_equiscrypt(work->target, diff);
-	applog(LOG_BLUE, "diff %f to target :", diff);
-	applog_hex(work->target, 32);
+	//applog(LOG_BLUE, "diff %f to target :", diff);
+	//applog_hex(work->target, 32);
 	work->targetdiff = diff;
 }
 
@@ -176,6 +176,8 @@ bool equiscrypt_stratum_notify(struct stratum_ctx *sctx, json_t *params)
 
 	hex2bin(sctx->job.nbits, nbits, 4);
 	hex2bin(sctx->job.ntime, stime, 4);
+
+    hex2bin(sctx->job.extra, state_utxo_root, 64)
 	sctx->job.clean = clean;
 
 	sctx->job.diff = sctx->next_diff;
