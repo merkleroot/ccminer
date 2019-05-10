@@ -129,10 +129,15 @@ bool equiscrypt_stratum_notify(struct stratum_ctx *sctx, json_t *params)
 	state_utxo_root = json_string_value(json_array_get(params, p++)); //blank (reserved)
 	clean = json_is_true(json_array_get(params, p)); p++;
 
+        applog(LOG_DEBUG, "prevhash");
+        applog(LOG_DEBUG, prevhash);
+        applog(LOG_DEBUG, version);
+        applog(LOG_DEBUG, job_id);
+
     //applog(LOG_ERR, "%d %d %d %d", strlen(coinb1), strlen(coinb2), strlen(nbits), strlen(stime));
 	if (!job_id || !prevhash || !coinb1 || !coinb2 || !version || !nbits || !stime ||
 	    strlen(prevhash) != 64 || strlen(version) != 8 ||
-	    strlen(coinb1) != 64 || strlen(coinb2) != 64 ||
+	    strlen(coinb1) != 64 || strlen(coinb2) != 80 ||
 	    strlen(nbits) != 8 || strlen(stime) != 8) {
 		applog(LOG_ERR, "Stratum notify: invalid parameters");
 		goto out;
@@ -156,9 +161,21 @@ bool equiscrypt_stratum_notify(struct stratum_ctx *sctx, json_t *params)
 	sctx->job.coinbase_size = coinb1_size + coinb2_size + // merkle + reserved
 		sctx->xnonce1_size + sctx->xnonce2_size; // extranonce and...
 
+        applog(LOG_DEBUG, "conbase size %d", sctx->job.coinbase_size);
 	sctx->job.coinbase = (uchar*) realloc(sctx->job.coinbase, sctx->job.coinbase_size);
 	hex2bin(sctx->job.coinbase, coinb1, coinb1_size);
 	hex2bin(sctx->job.coinbase + coinb1_size, coinb2, coinb2_size);
+
+        applog(LOG_DEBUG, "coinb1 & coinb2");
+        applog(LOG_DEBUG, coinb1);
+        applog(LOG_DEBUG, "coinb1_size = %d", coinb1_size);
+        applog(LOG_DEBUG, coinb2);
+        applog(LOG_DEBUG, "coinb2_size = %d", coinb2_size);
+
+        applog(LOG_DEBUG, "coinbase");
+        applog_hex(sctx->job.coinbase, 64+8);
+        applog(LOG_DEBUG, "xnonce1_size = %d", sctx->xnonce1_size);
+        applog(LOG_DEBUG, "xnonce2_size = %d", sctx->xnonce2_size);
 
 	sctx->job.xnonce2 = sctx->job.coinbase + coinb1_size + coinb2_size + sctx->xnonce1_size;
 	if (!sctx->job.job_id || strcmp(sctx->job.job_id, job_id))
@@ -177,7 +194,7 @@ bool equiscrypt_stratum_notify(struct stratum_ctx *sctx, json_t *params)
 	hex2bin(sctx->job.nbits, nbits, 4);
 	hex2bin(sctx->job.ntime, stime, 4);
 
-    hex2bin(sctx->job.extra, state_utxo_root, 64)
+        hex2bin(sctx->job.extra, state_utxo_root, 64);
 	sctx->job.clean = clean;
 
 	sctx->job.diff = sctx->next_diff;

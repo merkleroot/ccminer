@@ -149,7 +149,7 @@ static bool cb_cancel(int thr_id) {
 
 extern "C" int scanhash_equiscrypthash(int thr_id, struct work *work, uint32_t max_nonce, unsigned long *hashes_done)
 {
-	uint32_t _ALIGN(64) endiandata[35];
+	uint32_t _ALIGN(64) endiandata[53];
 	uint32_t *pdata = work->data;
 	uint32_t *ptarget = work->target;
 	const uint32_t first_nonce = pdata[NONCE_OFT];

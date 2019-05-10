@@ -1594,7 +1594,6 @@ static bool stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 	work->xnonce2_len = sctx->xnonce2_size;
 	memcpy(work->xnonce2, sctx->job.xnonce2, sctx->xnonce2_size);
     
-    applog(LOG_DEBUG, sctx->job.diff)
 
 	// also store the block number
 	work->height = sctx->job.height;
@@ -1676,12 +1675,12 @@ static bool stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 		work->data[35] = 0x80;
 		//applog_hex(work->data, 140);
 	} else if (opt_algo == ALGO_EQUISCRTYPHASH) {
-		memcpy(&work->data[9], sctx->job.coinbase, 32+32); // merkle [9..16] + reserved
-		work->data[25] = le32dec(sctx->job.ntime);
-		work->data[26] = le32dec(sctx->job.nbits);
-		memcpy(&work->data[27], sctx->xnonce1, sctx->xnonce1_size & 0x1F); // pool extranonce
-		memcpy(&work->data[28], sctx->job.extra, 64);
-		work->data[35] = 0x80;
+		memcpy(&work->data[9], sctx->job.coinbase, 32+32 + 8); // merkle [9..16] + reserved
+		work->data[27] = le32dec(sctx->job.ntime);
+		work->data[28] = le32dec(sctx->job.nbits);
+		memcpy(&work->data[29], sctx->job.extra, 64);
+		memcpy(&work->data[45], sctx->xnonce1, sctx->xnonce1_size & 0x1F); // pool extranonce
+		work->data[47] = 0x80;
 		applog_hex(work->data, 212);
 	} else if (opt_algo == ALGO_LBRY) {
 		for (i = 0; i < 8; i++)
