@@ -23,7 +23,7 @@
 //#include <mutex>
 
 #include "equiscrypthash.h"
-#include "eqscryptcuda.hpp" // eq_cuda_context
+#include "eqscryptcuda.hpp" // eqscrypt_cuda_context
 
 #include "blake2/blake2.h"
 
@@ -1945,7 +1945,7 @@ dec_cuCtxDestroy _cuCtxDestroy = nullptr;
 #endif
 
 template <u32 RB, u32 SM, u32 SSM, u32 THREADS, typename PACKER>
-__host__ eq_cuda_context<RB, SM, SSM, THREADS, PACKER>::eq_cuda_context(int thr_id, int dev_id)
+__host__ eqscrypt_cuda_context<RB, SM, SSM, THREADS, PACKER>::eqscrypt_cuda_context(int thr_id, int dev_id)
 {
 	thread_id = thr_id;
 	device_id = dev_id;
@@ -2012,7 +2012,7 @@ __host__ eq_cuda_context<RB, SM, SSM, THREADS, PACKER>::eq_cuda_context(int thr_
 }
 
 template <u32 RB, u32 SM, u32 SSM, u32 THREADS, typename PACKER>
-__host__ void eq_cuda_context<RB, SM, SSM, THREADS, PACKER>::solve(const char *tequiscrypthash_header,
+__host__ void eqscrypt_cuda_context<RB, SM, SSM, THREADS, PACKER>::solve(const char *tequiscrypthash_header,
 	unsigned int tequiscrypthash_header_len,
 	const char* nonce,
 	unsigned int nonce_len,
@@ -2087,7 +2087,7 @@ __host__ void eq_cuda_context<RB, SM, SSM, THREADS, PACKER>::solve(const char *t
 // destructor
 template <u32 RB, u32 SM, u32 SSM, u32 THREADS, typename PACKER>
 __host__
-void eq_cuda_context<RB, SM, SSM, THREADS, PACKER>::freemem()
+void eqscrypt_cuda_context<RB, SM, SSM, THREADS, PACKER>::freemem()
 {
 	if (solutions)
 		free(solutions);
@@ -2112,19 +2112,19 @@ void eq_cuda_context<RB, SM, SSM, THREADS, PACKER>::freemem()
 
 template <u32 RB, u32 SM, u32 SSM, u32 THREADS, typename PACKER>
 __host__
-eq_cuda_context<RB, SM, SSM, THREADS, PACKER>::~eq_cuda_context()
+eqscrypt_cuda_context<RB, SM, SSM, THREADS, PACKER>::~eqscrypt_cuda_context()
 {
 	freemem();
 }
 
 #ifdef CONFIG_MODE_1
-template class eq_cuda_context<CONFIG_MODE_1>;
+template class eqscrypt_cuda_context<CONFIG_MODE_1>;
 #endif
 
 #ifdef CONFIG_MODE_2
-template class eq_cuda_context<CONFIG_MODE_2>;
+template class eqscrypt_cuda_context<CONFIG_MODE_2>;
 #endif
 
 #ifdef CONFIG_MODE_3
-template class eq_cuda_context<CONFIG_MODE_3>;
+template class eqscrypt_cuda_context<CONFIG_MODE_3>;
 #endif
