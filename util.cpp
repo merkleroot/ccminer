@@ -1458,6 +1458,9 @@ static bool stratum_notify(struct stratum_ctx *sctx, json_t *params)
 	if (sctx->is_equihash) {
 		return equi_stratum_notify(sctx, params);
 	}
+	if (sctx->is_equiscrypthash) {
+		return equiscrypt_stratum_notify(sctx, params);
+	}
 
 	job_id = json_string_value(json_array_get(params, p++));
 	prevhash = json_string_value(json_array_get(params, p++));

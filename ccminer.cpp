@@ -45,6 +45,7 @@
 #include "sia/sia-rpc.h"
 #include "crypto/xmr-rpc.h"
 #include "equi/equihash.h"
+#include "equiscrypt/equiscrypthash.h"
 
 #include <cuda_runtime.h>
 
@@ -253,6 +254,7 @@ Options:\n\
 			decred      Decred Blake256\n\
 			deep        Deepcoin\n\
 			equihash    Zcash Equihash\n\
+			equiscrypthash    Vds EquiScrypthash\n\
 			exosis      Exosis timetravel\n\
 			dmd-gr      Diamond-Groestl\n\
 			fresh       Freshcoin (shavite 80)\n\
@@ -593,6 +595,8 @@ void format_hashrate(double hashrate, char *output)
 {
 	if (opt_algo == ALGO_EQUIHASH)
 		format_hashrate_unit(hashrate, output, "Sol/s");
+	else if (opt_algo == ALGO_EQUISCRTYPHASH)
+		format_hashrate_unit(hashrate, output, "Sol/s");
 	else
 		format_hashrate_unit(hashrate, output, "H/s");
 }
@@ -682,6 +686,10 @@ static void calc_network_diff(struct work *work)
 	if (opt_algo == ALGO_SIA) nbits = work->data[11]; // unsure if correct
 	if (opt_algo == ALGO_EQUIHASH) {
 		net_diff = equi_network_diff(work);
+		return;
+	}
+	if (opt_algo == ALGO_EQUISCRTYPHASH) {
+		net_diff = equiscrypt_network_diff(work);
 		return;
 	}
 
@@ -917,6 +925,17 @@ static bool submit_upstream_work(CURL *curl, struct work *work)
 	}
 
 	if (pool->type & POOL_STRATUM && stratum.is_equihash) {
+		struct work submit_work;
+		memcpy(&submit_work, work, sizeof(struct work));
+		//if (!hashlog_already_submittted(submit_work.job_id, submit_work.nonces[idnonce])) {
+			if (equi_stratum_submit(pool, &submit_work))
+				hashlog_remember_submit(&submit_work, submit_work.nonces[idnonce]);
+			stratum.job.shares_count++;
+		//}
+		return true;
+	}
+
+	if (pool->type & POOL_STRATUM && stratum.is_equiscrypthash) {
 		struct work submit_work;
 		memcpy(&submit_work, work, sizeof(struct work));
 		//if (!hashlog_already_submittted(submit_work.job_id, submit_work.nonces[idnonce])) {
@@ -1584,6 +1603,7 @@ static bool stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 	switch (opt_algo) {
 		case ALGO_DECRED:
 		case ALGO_EQUIHASH:
+		case ALGO_EQUISCRTYPHASH:
 		case ALGO_SIA:
 			// getwork over stratum, no merkle to generate
 			break;
@@ -1648,6 +1668,13 @@ static bool stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 		//applog_hex(work->data, 180);
 	} else if (opt_algo == ALGO_EQUIHASH) {
 		memcpy(&work->data[9], sctx->job.coinbase, 32+32); // merkle [9..16] + reserved
+		work->data[25] = le32dec(sctx->job.ntime);
+		work->data[26] = le32dec(sctx->job.nbits);
+		memcpy(&work->data[27], sctx->xnonce1, sctx->xnonce1_size & 0x1F); // pool extranonce
+		work->data[35] = 0x80;
+		//applog_hex(work->data, 140);
+	} else if (opt_algo == ALGO_EQUISCRTYPHASH) {
+		memcpy(&work->data[9], sctx->job.coinbase, 32+32+8); // merkle [9..16] + reserved
 		work->data[25] = le32dec(sctx->job.ntime);
 		work->data[26] = le32dec(sctx->job.nbits);
 		memcpy(&work->data[27], sctx->xnonce1, sctx->xnonce1_size & 0x1F); // pool extranonce
@@ -2417,6 +2444,9 @@ static void *miner_thread(void *userdata)
 			break;
 		case ALGO_EQUIHASH:
 			rc = scanhash_equihash(thr_id, &work, max_nonce, &hashes_done);
+			break;
+		case ALGO_EQUISCRTYPHASH:
+			rc = scanhash_equiscrypthash(thr_id, &work, max_nonce, &hashes_done);
 			break;
 		case ALGO_FRESH:
 			rc = scanhash_fresh(thr_id, &work, max_nonce, &hashes_done);
