@@ -68,7 +68,7 @@ struct packer_cantor;
 #define MAXREALSOLS 9
 
 struct scontainerreal {
-	u32 sols[MAXREALSOLS][512];
+	u32 sols[MAXREALSOLS][32];
 	u32 nsols;
 };
 

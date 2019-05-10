@@ -205,7 +205,7 @@ extern "C" int scanhash_equiscrypthash(int thr_id, struct work *work, uint32_t m
 			valid_sols[thr_id] = 0;
 			solvers[thr_id]->solve(
 				(const char *) endiandata, (unsigned int) (212 - 32),
-				(const char *) &endiandata[27], (unsigned int) 32,
+				(const char *) &endiandata[45], (unsigned int) 32,
 				&cb_cancel, &cb_solution, &cb_hashdone
 			);
 

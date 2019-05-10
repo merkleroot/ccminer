@@ -145,7 +145,7 @@ bool equiscrypt_verify(uint8_t* const hdr, uint8_t* const soln)
 	const uint32_t equiscrypthashSolutionSize = (1 << k) * (n / (k + 1) + 1) / 8;
 	const uint32_t solnr = 1 << k;
 
-	uint32_t indices[512] = { 0 };
+	uint32_t indices[solnr] = { 0 };
 	uint8_t vHash[hashLength] = { 0 };
 
 	blake2b_state state;
