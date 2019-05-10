@@ -27,19 +27,19 @@
 
 #include "blake2/blake2.h"
 
-//#define WN 96
-//#define WK 5
+//#define WNWN 96
+//#define WKWK 5
 #ifndef MAX_GPUS
 #define MAX_GPUS 16
 #endif
 
-#define NDIGITS		(WK+1)
-#define DIGITBITS	(WN/(NDIGITS))
-#define PROOFSIZE (1<<WK)
+#define NDIGITS		(WKWK+1)
+#define DIGITBITS	(WNWN/(NDIGITS))
+#define PROOFSIZE (1<<WKWK)
 #define BASE (1<<DIGITBITS)
 #define NHASHES (2*BASE)
-#define HASHESPERBLAKE (512/WN)
-#define HASHOUT (HASHESPERBLAKE*WN/8)
+#define HASHESPERBLAKE (512/WNWN)
+#define HASHOUT (HASHESPERBLAKE*WNWN/8)
 #define NBLOCKS ((NHASHES + HASHESPERBLAKE - 1) / HASHESPERBLAKE)
 #define BUCKBITS (DIGITBITS - RB)
 #define NBUCKETS (1 << BUCKBITS)
@@ -1910,8 +1910,8 @@ static void sort_pair(uint32_t *a, uint32_t len)
 __host__
 static void setheader(blake2b_state *ctx, const char *header, const u32 headerLen, const char* nce, const u32 nonceLen)
 {
-	uint32_t le_N = WN;
-	uint32_t le_K = WK;
+	uint32_t le_N = WNWN;
+	uint32_t le_K = WKWK;
 	uchar personal[] = "ZcashPoW01230123";
 	memcpy(personal + 8, &le_N, 4);
 	memcpy(personal + 12, &le_K, 4);

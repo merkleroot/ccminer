@@ -135,8 +135,8 @@ static int isZero(const uint8_t *hash, size_t len)
 // soln -> equiscrypthash solution (excluding 3 bytes with size, so 1344 bytes length)
 bool equiscrypt_verify(uint8_t* const hdr, uint8_t* const soln)
 {
-	const uint32_t n = WN; // 200
-	const uint32_t k = WK; // 9
+	const uint32_t n = WNWN; // 200
+	const uint32_t k = WKWK; // 9
 	const uint32_t collisionBitLength = n / (k + 1);
 	const uint32_t collisionByteLength = (collisionBitLength + 7) / 8;
 	const uint32_t hashLength = (k + 1) * collisionByteLength;
