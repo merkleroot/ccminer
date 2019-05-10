@@ -1787,6 +1787,9 @@ static bool stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 		case ALGO_EQUIHASH:
 			equi_work_set_target(work, sctx->job.diff / opt_difficulty);
 			break;
+		case ALGO_EQUISCRYPTHASH:
+			equiscrypt_work_set_target(work, sctx->job.diff / opt_difficulty);
+			break;
 		default:
 			work_set_target(work, sctx->job.diff / opt_difficulty);
 	}
@@ -1797,7 +1800,7 @@ static bool stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 		stratum_diff = sctx->job.diff;
 		if (opt_showdiff && work->targetdiff != stratum_diff)
 			snprintf(sdiff, 32, " (%.5f)", work->targetdiff);
-		applog(LOG_WARNING, "Stratum difficulty set to %g%s", stratum_diff, sdiff);
+		applog(LOG_WARNING, "Stratum difficulty set to %g %s", stratum_diff, sdiff);
 	}
 
 	return true;
