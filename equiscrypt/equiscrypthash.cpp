@@ -281,7 +281,7 @@ void free_equiscrypthash(int thr_id)
 		return;
 
 	// assume config 1 was used... interface destructor seems bad
-	eqscrypt_cuda_context<CONFIG_MODE_1>* ptr = dynamic_cast<eqscrypt_cuda_context<CONFIG_MODE_1>*>(solvers[thr_id]);
+	eqscrypt_cuda_context<ES_CONFIG_MODE_1>* ptr = dynamic_cast<eqscrypt_cuda_context<ES_CONFIG_MODE_1>*>(solvers[thr_id]);
 	ptr->freemem();
 	ptr = NULL;
 
