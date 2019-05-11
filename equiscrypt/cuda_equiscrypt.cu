@@ -33,13 +33,13 @@
 #define MAX_GPUS 16
 #endif
 
-#define NDIGITS		(WKWK+1)
-#define DIGITBITS	(WNWN/(NDIGITS))
-#define PROOFSIZE (1<<WKWK)
-#define BASE (1<<DIGITBITS)
-#define NHASHES (2*BASE)
-#define HASHESPERBLAKE (512/WNWN)
-#define HASHOUT (HASHESPERBLAKE*WNWN/8)
+#define NDIGITS		(WKWK+1) // 6
+#define DIGITBITS	(WNWN/(NDIGITS)) // 16
+#define PROOFSIZE (1<<WKWK) // 32
+#define BASE (1<<DIGITBITS) // 65536
+#define NHASHES (2*BASE) // 131072
+#define HASHESPERBLAKE (512/WNWN) // 5
+#define HASHOUT (HASHESPERBLAKE*WNWN/8) // 60
 #define NBLOCKS ((NHASHES + HASHESPERBLAKE - 1) / HASHESPERBLAKE)
 #define BUCKBITS (DIGITBITS - RB)
 #define NBUCKETS (1 << BUCKBITS)
@@ -2047,11 +2047,6 @@ __host__ void eqscrypt_cuda_context<RB, SM, SSM, THREADS, PACKER>::solve(const c
 	if (cancelf(thread_id)) return;
 
 	digit_4<RB, SM, SSM, PACKER, 4 * NRESTS, THREADS> <<<blocks, THREADS >>>(device_eq);
-	digit_5<RB, SM, SSM, PACKER, 4 * NRESTS, THREADS> <<<blocks, THREADS >>>(device_eq);
-
-	digit_6<RB, SM, SSM - 1, PACKER, 3 * NRESTS> <<<blocks, NRESTS >>>(device_eq);
-	digit_7<RB, SM, SSM - 1, PACKER, 3 * NRESTS> <<<blocks, NRESTS >>>(device_eq);
-	digit_8<RB, SM, SSM - 1, PACKER, 3 * NRESTS> <<<blocks, NRESTS >>>(device_eq);
 
 	digit_last_wdc<RB, SM, SSM - 3, 2, PACKER, 64, 8, 4> <<<4096, 256 / 2 >>>(device_eq);
 
@@ -2117,8 +2112,8 @@ eqscrypt_cuda_context<RB, SM, SSM, THREADS, PACKER>::~eqscrypt_cuda_context()
 	freemem();
 }
 
-#ifdef CONFIG_MODE_1
-template class eqscrypt_cuda_context<CONFIG_MODE_1>;
+#ifdef ES_CONFIG_MODE_1
+template class eqscrypt_cuda_context<ES_CONFIG_MODE_1>;
 #endif
 
 #ifdef CONFIG_MODE_2

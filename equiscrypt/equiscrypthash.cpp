@@ -166,7 +166,7 @@ extern "C" int scanhash_equiscrypthash(int thr_id, struct work *work, uint32_t m
 			int mode = 1;
 			switch (mode) {
 			case 1:
-				solvers[thr_id] = new eqscrypt_cuda_context<CONFIG_MODE_1>(thr_id, device_map[thr_id]);
+				solvers[thr_id] = new eqscrypt_cuda_context<ES_CONFIG_MODE_1>(thr_id, device_map[thr_id]);
 				break;
 #ifdef CONFIG_MODE_2
 			case 2:
